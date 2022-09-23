@@ -1,15 +1,29 @@
 import {PrismaClient} from '@prisma/client';
 import {addExitCallback} from 'catch-exit';
+import {
+    ClientModelNamesEnum,
+    makeModelNameEnum,
+} from '../generic-database-client/generic-client/generic-model';
 
 const myPrismaClient = new PrismaClient();
 
-export type PlaygroundDbClient = typeof myPrismaClient;
+export type PlaygroundClient = typeof myPrismaClient;
+
+export type WithClientInterface = {
+    client: PlaygroundClient;
+    modelNames: ClientModelNamesEnum<PlaygroundClient>;
+};
 
 export async function callWithDbClient(
-    callback: (client: PlaygroundDbClient) => void | Promise<void>,
+    callback: (client: WithClientInterface) => void | Promise<void>,
 ) {
     try {
-        await callback(myPrismaClient);
+        const clientInterface: WithClientInterface = {
+            client: myPrismaClient,
+            modelNames: makeModelNameEnum(myPrismaClient),
+        };
+
+        await callback(clientInterface);
     } finally {
         await myPrismaClient.$disconnect();
     }
