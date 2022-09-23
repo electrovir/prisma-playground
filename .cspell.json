@@ -1,4 +1,8 @@
 {
     "import": ".virmator/.cspell-base.json",
-    "words": []
+    "ignorePaths": [
+        "*.sqlite",
+        "prisma/migrations"
+    ],
+    "words": ["datasource"]
 }

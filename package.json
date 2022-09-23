@@ -1,5 +1,6 @@
 {
     "name": "prisma-playground",
+    "version": "0.0.0",
     "private": true,
     "homepage": "https://github.com/electrovir/prisma-playground",
     "bugs": {
@@ -18,15 +19,27 @@
         "build": "virmator frontend build",
         "compile": "rm -rf dist && tsc --project tsconfig.json",
         "docs:update": "virmator code-in-markdown",
-        "format": "virmator format write",
+        "format": "virmator format",
         "prepublishOnly": "npm run compile && npm run test:full",
+        "prisma": "prisma migrate dev",
+        "prisma:init": "prisma migrate dev --name init && ts-node src/database-client/seeding/seed-from-nothing.ts",
+        "prisma:reset": "rm -rf prisma/database && prisma migrate dev --name init && ts-node src/database-client/seeding/seed-from-nothing.ts",
         "spellcheck": "virmator spellcheck",
         "start": "npm install && vite --force --config .virmator/vite/vite.config.ts",
         "test": "virmator test",
         "test:full": "npm run test:types && npm test && npm run spellcheck && virmator format check",
         "test:types": "tsc --noEmit"
     },
+    "dependencies": {
+        "@prisma/client": "4.3.1",
+        "augment-vir": "2.5.1",
+        "catch-exit": "1.2.2"
+    },
     "devDependencies": {
+        "@types/chai": "4.3.3",
+        "@types/node": "18.7.18",
+        "prisma": "4.3.1",
+        "typescript": "4.8.3",
         "virmator": "3.0.6"
     }
 }
