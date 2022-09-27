@@ -22,10 +22,10 @@
         "format": "virmator format",
         "prepublishOnly": "npm run compile && npm run test:full",
         "prisma": "prisma migrate dev",
-        "prisma:init": "prisma migrate dev --name init && ts-node src/database-client/seeding/seed-from-nothing.ts",
-        "prisma:reset": "rm -rf prisma/database && prisma migrate dev --name init && ts-node src/database-client/seeding/seed-from-nothing.ts",
+        "prisma:init": "prisma migrate dev --name init && ts-node ./src/database/prisma-client/seeding/seed-from-nothing.ts",
+        "prisma:reset": "bash ./scripts/bash-scripts/prisma/reset-prisma.sh",
         "spellcheck": "virmator spellcheck",
-        "start": "npm install && vite --force --config .virmator/vite/vite.config.ts",
+        "start": "cd packages/frontend && npm start",
         "test": "virmator test",
         "test:full": "npm run test:types && npm test && npm run spellcheck && virmator format check",
         "test:types": "tsc --noEmit"
@@ -38,6 +38,7 @@
     "devDependencies": {
         "@types/chai": "4.3.3",
         "@types/node": "18.7.18",
+        "dotenv-cli": "6.0.0",
         "prisma": "4.3.1",
         "typescript": "4.8.3",
         "virmator": "3.0.6"

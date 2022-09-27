@@ -1,0 +1,20 @@
+{
+    "name": "prisma-playground-frontend",
+    "version": "0.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "electrovir",
+        "url": "https://github.com/electrovir"
+    },
+    "scripts": {
+        "build": "virmator frontend build",
+        "compile": "rm -rf dist && tsc --project tsconfig.json",
+        "prepublishOnly": "npm run compile && npm run test:full",
+        "start": "npm install && vite --force --config ../../.virmator/vite.config.ts",
+        "test": "virmator test-web",
+        "test:types": "tsc --noEmit"
+    },
+    "dependencies": {
+        "element-vir": "6.0.0"
+    }
+}

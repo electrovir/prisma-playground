@@ -35,3 +35,5 @@ addExitCallback((signal) => {
         myPrismaClient.$disconnect();
     }
 });
+
+function acceptStuff(input: Parameters<typeof myPrismaClient.post.create>[0]) {}
