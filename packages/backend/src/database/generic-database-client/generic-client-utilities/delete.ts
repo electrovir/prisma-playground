@@ -1,5 +1,5 @@
-import {ConcreteClientBase} from '../generic-client/concrete-client-base';
-import {mapForEachModel} from '../generic-client/generic-model';
+import {ConcreteClientBase} from '../../../shared/database/generic-database-client/concrete-client-base';
+import {mapForEachModel} from '../../../shared/database/generic-database-client/generic-model';
 
 export async function clearDatabase<ClientGeneric extends ConcreteClientBase>(
     client: ClientGeneric,

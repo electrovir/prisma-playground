@@ -1,6 +1,9 @@
 import {awaitedForEach, typedHasOwnProperty, Writeable} from 'augment-vir';
-import {ConcreteClientBase} from '../generic-client/concrete-client-base';
-import {ClientModelName, getGenericModel} from '../generic-client/generic-model';
+import {ConcreteClientBase} from '../../../shared/database/generic-database-client/concrete-client-base';
+import {
+    ClientModelName,
+    getGenericModel,
+} from '../../../shared/database/generic-database-client/generic-model';
 
 export type CreateModelEntryData<
     ClientGeneric extends ConcreteClientBase,

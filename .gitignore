@@ -3,6 +3,6 @@
 /coverage/
 /dist/
 /graphics/
-/node_modules/
+node_modules/
 
 /prisma/database/

@@ -1,5 +1,5 @@
 import {clearDatabase} from '../../generic-database-client/generic-client-utilities/delete';
-import {callWithDbClient, WithClientInterface} from '../prisma-client';
+import {callWithDatabaseClient, WithClientInterface} from '../prisma-client';
 import {seedFromNothing} from './seed-from-nothing';
 
 async function resetDatabase(clientInterface: WithClientInterface) {
@@ -8,5 +8,5 @@ async function resetDatabase(clientInterface: WithClientInterface) {
 }
 
 if (require.main === module) {
-    callWithDbClient(resetDatabase);
+    callWithDatabaseClient(resetDatabase);
 }

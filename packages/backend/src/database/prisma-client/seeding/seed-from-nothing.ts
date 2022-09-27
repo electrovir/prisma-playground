@@ -5,7 +5,7 @@ import {
     CreateModelEntryData,
 } from '../../generic-database-client/generic-client-utilities/create';
 import {assertAllModelsAreEmpty} from '../../generic-database-client/generic-client-utilities/delete';
-import {callWithDbClient, PlaygroundClient, WithClientInterface} from '../prisma-client';
+import {callWithDatabaseClient, PlaygroundClient, WithClientInterface} from '../prisma-client';
 
 export async function seedFromNothing({client, modelNames}: WithClientInterface) {
     try {
@@ -71,5 +71,5 @@ function generateRandomPostData(
 }
 
 if (require.main === module) {
-    callWithDbClient(seedFromNothing);
+    callWithDatabaseClient(seedFromNothing);
 }

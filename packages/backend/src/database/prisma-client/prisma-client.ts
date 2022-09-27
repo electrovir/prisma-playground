@@ -1,11 +1,21 @@
 import {PrismaClient} from '@prisma/client';
 import {addExitCallback} from 'catch-exit';
+import {join} from 'path';
+import {repoDir} from '../../file-paths';
 import {
     ClientModelNamesEnum,
     makeModelNameEnum,
-} from '../generic-database-client/generic-client/generic-model';
+} from '../../shared/database/generic-database-client/generic-model';
 
-const myPrismaClient = new PrismaClient();
+const devDbPath = join(repoDir, 'prisma/database/dev.sqlite');
+
+const myPrismaClient = new PrismaClient({
+    datasources: {
+        db: {
+            url: `file:${devDbPath}`,
+        },
+    },
+});
 
 export type PlaygroundClient = typeof myPrismaClient;
 
@@ -19,14 +29,10 @@ const clientInterface: WithClientInterface = {
     modelNames: makeModelNameEnum(myPrismaClient),
 };
 
-export async function callWithDbClient(
-    callback: (client: WithClientInterface) => void | Promise<void>,
+export async function callWithDatabaseClient<T>(
+    callback: (client: WithClientInterface) => T | Promise<T>,
 ) {
-    try {
-        await callback(clientInterface);
-    } finally {
-        await myPrismaClient.$disconnect();
-    }
+    return await callback(clientInterface);
 }
 
 addExitCallback((signal) => {
@@ -35,5 +41,3 @@ addExitCallback((signal) => {
         myPrismaClient.$disconnect();
     }
 });
-
-function acceptStuff(input: Parameters<typeof myPrismaClient.post.create>[0]) {}

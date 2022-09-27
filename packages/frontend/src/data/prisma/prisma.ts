@@ -1,1 +1,0 @@
-export type CreateItemType<ModeName extends >
