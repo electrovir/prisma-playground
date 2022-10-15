@@ -1,4 +1,7 @@
-import {callWithDatabaseClient, WithClientInterface} from '../database/prisma-client/prisma-client';
+import {
+    callWithDatabaseClient,
+    WithClientInterface,
+} from '@electrovir/database/src/prisma/prisma-client';
 import {startApolloServer} from './apollo';
 import {startExpressApp} from './express';
 

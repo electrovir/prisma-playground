@@ -1,0 +1,24 @@
+{
+    "name": "@electrovir/shared",
+    "version": "0.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "electrovir",
+        "url": "https://github.com/electrovir"
+    },
+    "scripts": {
+        "compile": "rm -rf dist && tsc --project tsconfig.json",
+        "test": "virmator test"
+    },
+    "devDependencies": {
+        "@istanbuljs/nyc-config-typescript": "^1.0.2",
+        "@types/chai": "^4.3.3",
+        "@types/mocha": "^10.0.0",
+        "chai": "^4.3.6",
+        "istanbul-smart-text-reporter": "^0.0.1",
+        "mocha": "^10.0.0",
+        "mocha-spec-reporter-with-file-names": "^0.0.0",
+        "nyc": "^15.1.0",
+        "ts-node": "^10.9.1"
+    }
+}

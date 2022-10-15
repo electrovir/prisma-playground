@@ -15,32 +15,33 @@
         "name": "electrovir",
         "url": "https://github.com/electrovir"
     },
+    "workspaces": [
+        "./packages/*"
+    ],
     "scripts": {
-        "build": "virmator frontend build",
-        "compile": "rm -rf dist && tsc --project tsconfig.json",
-        "docs:update": "virmator code-in-markdown",
+        "compile": "npm run compile --workspaces",
+        "database:reset": "cd packages/database && npm run prisma:reset",
         "format": "virmator format",
-        "prepublishOnly": "npm run compile && npm run test:full",
-        "prisma": "prisma migrate dev",
-        "prisma:init": "prisma migrate dev --name init && ts-node ./src/database/prisma-client/seeding/seed-from-nothing.ts",
-        "prisma:reset": "bash ./scripts/bash-scripts/prisma/reset-prisma.sh",
+        "prepack": "npm run compile",
+        "playground": "cd packages/backend && npm run playground",
+        "prepublishOnly": "npm run compile && npm run test:all",
         "spellcheck": "virmator spellcheck",
-        "start": "cd packages/frontend && npm start",
-        "test": "virmator test",
-        "test:full": "npm run test:types && npm test && npm run spellcheck && virmator format check",
-        "test:types": "tsc --noEmit"
-    },
-    "dependencies": {
-        "@prisma/client": "4.3.1",
-        "augment-vir": "2.5.1",
-        "catch-exit": "1.2.2"
+        "start": "concurrently -n frontend,backend -c blue,green \"npm:start:frontend\" \"npm:start:backend\"",
+        "start:backend": "cd packages/backend && npm start",
+        "start:frontend": "cd packages/frontend && npm start",
+        "test": "npm run test --workspaces -s",
+        "test:all": "npm run test:types && npm test && npm run spellcheck && virmator format check && npm test",
+        "test:types": "tsc --build tsconfig.build.json"
     },
     "devDependencies": {
-        "@types/chai": "4.3.3",
-        "@types/node": "18.7.18",
-        "dotenv-cli": "6.0.0",
-        "prisma": "4.3.1",
-        "typescript": "4.8.3",
-        "virmator": "3.0.6"
+        "concurrently": "7.4.0",
+        "prettier": "^2.7.1",
+        "prettier-plugin-jsdoc": "^0.4.2",
+        "prettier-plugin-multiline-arrays": "^1.1.1",
+        "prettier-plugin-organize-imports": "^3.1.1",
+        "prettier-plugin-packagejson": "^2.3.0",
+        "prettier-plugin-sort-json": "^0.0.3",
+        "prettier-plugin-toml": "^0.3.1",
+        "virmator": "^4.2.10"
     }
 }

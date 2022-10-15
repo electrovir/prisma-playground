@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-describe(__filename, () => {
+describe('dummy backend test', () => {
     it('should pass', () => {
         assert.isTrue(true);
     });

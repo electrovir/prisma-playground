@@ -1,6 +1,15 @@
 {
-    "extends": "../../.virmator/tsconfig-base.json",
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "rootDir": "./src"
-    }
+        "rootDir": "./src",
+        "outDir": "./dist"
+    },
+    "references": [
+        {
+            "path": "../database"
+        },
+        {
+            "path": "../shared"
+        }
+    ]
 }

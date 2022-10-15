@@ -1,0 +1,14 @@
+{
+    "extends": "virmator/base-configs/base-tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "declarationMap": true,
+        "incremental": true
+    },
+    "exclude": [
+        "./configs",
+        "./dist",
+        "./node_modules",
+        "./test-files"
+    ]
+}
