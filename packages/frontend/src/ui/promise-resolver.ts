@@ -71,7 +71,7 @@ export function awaited<ValueGeneric, FallbackGeneric, CallbackReturnGeneric>(
     resolvedCallback: (resolved: ValueGeneric) => CallbackReturnGeneric,
 ): CallbackReturnGeneric | FallbackGeneric | Error | undefined {
     console.log({input});
-    if (isPromiseLike(input)) {
+    if (isPromiseLike(input) || input == undefined) {
         return notResolvedYetFallback;
     } else if (typedHasOwnProperty(input, 'error')) {
         return input.error as Error;

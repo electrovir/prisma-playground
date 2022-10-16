@@ -1,8 +1,9 @@
 import {User} from '@prisma/client';
 import {isPromiseLike} from 'augment-vir';
 import {defineElementNoInputs, html} from 'element-vir';
-import {fetchUsers} from '../../network/database-access/request';
-import {awaited, createStateUpdatingPromiseIfUndefined, MaybePromise} from '../promise-resolver';
+// import {fetchUsers} from '../../network/database-access/request';
+import '../../network/database-access/request';
+import {awaited, MaybePromise} from '../promise-resolver';
 
 export const PrismaPlaygroundAppElement = defineElementNoInputs({
     tagName: 'prisma-playground-app',
@@ -10,12 +11,12 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
         users: undefined as MaybePromise<User[]>,
     },
     renderCallback: ({state, updateState}) => {
-        createStateUpdatingPromiseIfUndefined({
-            state,
-            updateState,
-            stateKey: 'users',
-            promiseCallback: fetchUsers,
-        });
+        // createStateUpdatingPromiseIfUndefined({
+        //     state,
+        //     updateState,
+        //     stateKey: 'users',
+        //     promiseCallback: fetchUsers,
+        // });
 
         if (!isPromiseLike(state.users)) {
             console.log(state.users);
