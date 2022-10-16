@@ -1,42 +1,57 @@
-import {createClient} from 'graphql-ws';
+import {createClient as createWebSocketClient} from 'graphql-ws';
 
-const client = createClient({
+const client = createWebSocketClient({
     url: 'ws://localhost:4000/graphql',
 });
 
-console.log('subscribing');
+async function getCurrentNumber(): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+        let combinedData: string = '';
+        client.subscribe(
+            {
+                query: `
+                    {
+                        currentNumber
+                    }
+                `,
+            },
+            {
+                next: (data) => {
+                    combinedData += data;
+                },
+                error: (error) => {
+                    reject(error);
+                },
+                complete: () => {
+                    resolve(Number(combinedData));
+                },
+            },
+        );
+    });
+}
 
-// just a query?
-client.subscribe(
-    {
-        query: '{ currentNumber }',
-    },
-    {
-        next: (data) => {
-            console.log({queryData: data});
+export async function subscribeToCurrentNumber(callback: (data: number) => void) {
+    const currentNumber = await getCurrentNumber();
+    client.subscribe(
+        {
+            query: `
+                    subscription {
+                        numberIncremented
+                    }
+                `,
         },
-        error: (error) => {
-            console.error({error});
+        {
+            next: (data) => {
+                callback(data.data!.numberIncremented as any);
+            },
+            error: (error) => {
+                console.error({error});
+            },
+            complete: () => {
+                console.log('subscription complete');
+            },
         },
-        complete: () => {
-            console.log('query complete');
-        },
-    },
-);
+    );
 
-client.subscribe(
-    {
-        query: 'subscription { numberIncremented }',
-    },
-    {
-        next: (data) => {
-            console.log({data});
-        },
-        error: (error) => {
-            console.error({error});
-        },
-        complete: () => {
-            console.log('subscription complete');
-        },
-    },
-);
+    return currentNumber;
+}

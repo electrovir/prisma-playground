@@ -1,88 +1,30 @@
-import {makeExecutableSchema} from '@graphql-tools/schema';
-import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
-import {ApolloServer} from 'apollo-server-express';
-import express from 'express';
+import {
+    callWithDatabaseClient,
+    WithClientInterface,
+} from '@electrovir/database/src/prisma/prisma-client';
 import {PubSub} from 'graphql-subscriptions';
-import {useServer} from 'graphql-ws/lib/use/ws';
 import {createServer} from 'http';
-import {WebSocketServer} from 'ws';
+import {startApolloServer} from '../servers/apollo/create-apollo-server';
+import {startExpressServer} from '../servers/express/create-express-server';
 
-async function main() {
+async function main(clientInterface: WithClientInterface) {
     const PORT = 4000;
-    const pubsub = new PubSub();
+    const pubSub = new PubSub();
 
-    // Schema definition
-    const typeDefs = `#graphql
-  type Query {
-    currentNumber: Int
-  }
-
-  type Subscription {
-    numberIncremented: Int
-  }
-`;
-
-    // Resolver map
-    const resolvers = {
-        Query: {
-            currentNumber() {
-                return currentNumber;
-            },
-        },
-        Subscription: {
-            numberIncremented: {
-                subscribe: () => pubsub.asyncIterator(['NUMBER_INCREMENTED']),
-            },
-        },
-    };
-
-    // Create schema, which will be used separately by ApolloServer and
-    // the WebSocket server.
-    const schema = makeExecutableSchema({typeDefs, resolvers});
-
-    // Create an Express app and HTTP server; we will attach the WebSocket
-    // server and the ApolloServer to this HTTP server.
-    const expressServer = express();
+    const expressServer = startExpressServer();
     const httpServer = createServer(expressServer);
 
-    // Set up WebSocket server.
-    const wsServer = new WebSocketServer({
-        server: httpServer,
-        path: '/graphql',
-    });
-    const serverCleanup = useServer({schema}, wsServer);
-
     // Set up ApolloServer.
-    const apolloServer = new ApolloServer({
-        schema,
-        plugins: [
-            // Proper shutdown for the HTTP server.
-            ApolloServerPluginDrainHttpServer({httpServer}),
-            // Proper shutdown for the WebSocket server.
-            {
-                async serverWillStart() {
-                    return {
-                        async drainServer() {
-                            await serverCleanup.dispose();
-                        },
-                    };
-                },
-            },
-        ],
+    const apolloServer = await startApolloServer({
+        httpServer,
+        prisma: clientInterface.client,
+        pubSub,
     });
-    await apolloServer.start();
 
     apolloServer.applyMiddleware({
         app: expressServer,
         path: '/graphql',
     });
-
-    // expressServer.use(
-    //     '/graphql',
-    //     cors<cors.CorsRequest>(),
-    //     bodyParser.json(),
-    //     expressMiddleware(apolloServer),
-    // );
 
     // Now that our HTTP server is fully set up, actually listen.
     httpServer.listen(PORT, () => {
@@ -95,23 +37,14 @@ async function main() {
     function incrementNumber() {
         // console.log('incrementing');
         currentNumber++;
-        pubsub.publish('NUMBER_INCREMENTED', {numberIncremented: currentNumber});
+        pubSub.publish('NUMBER_INCREMENTED', {numberIncremented: currentNumber});
         setTimeout(() => {
             incrementNumber();
         }, 1000);
     }
 
-    expressServer.use((req, res, next) => {
-        console.info(
-            `${req.method}: ${req.protocol}://${req.header('Host')}${
-                req.originalUrl
-            } from ${req.get('Origin')}`,
-        );
-        next();
-    });
-
     // Start incrementing
     incrementNumber();
 }
 
-main();
+callWithDatabaseClient(main);

@@ -1,7 +1,6 @@
 import cors, {CorsOptions} from 'cors';
-import express, {Express} from 'express';
 
-function setupCors(expressApp: Express) {
+export function createCorsMiddleware() {
     const allowedOrigins = [
         'http://localhost',
         'http://127.0.0.1',
@@ -22,23 +21,5 @@ function setupCors(expressApp: Express) {
         },
     };
 
-    expressApp.use(cors(corsOptions));
-}
-
-function setupLogger(expressApp: Express) {
-    expressApp.use((req, res, next) => {
-        console.info(
-            `${req.method}: ${req.protocol}://${req.header('Host')}${
-                req.originalUrl
-            } from ${req.get('Origin')}`,
-        );
-        next();
-    });
-}
-
-export function startExpressApp() {
-    const app = express();
-    setupCors(app);
-    setupLogger(app);
-    return app;
+    return cors(corsOptions);
 }

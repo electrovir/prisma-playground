@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import {buildSchema, resolvers} from './type-graphql';
 
 export async function buildPlaygroundSchema() {
