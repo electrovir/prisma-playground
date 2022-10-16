@@ -1,5 +1,4 @@
 import {User} from '@prisma/client';
-import {isPromiseLike} from 'augment-vir';
 import {defineElementNoInputs, html} from 'element-vir';
 // import {fetchUsers} from '../../network/database-access/request';
 import '../../network/database-access/request';
@@ -26,10 +25,6 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
             stateKey: 'users',
             promiseCallback: fetchUsers,
         });
-
-        if (!isPromiseLike(state.users)) {
-            console.log(state.users);
-        }
 
         return html`
             <span>
