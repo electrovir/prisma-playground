@@ -1,7 +1,7 @@
 import {ConcreteClientBase} from '@electrovir/database/src/generic-database-client/generic-database-client/concrete-client-base';
+import {IResolvers} from '@graphql-tools/utils';
 import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
 import {ApolloServer} from 'apollo-server-express';
-import {PubSub} from 'graphql-subscriptions';
 import {useServer} from 'graphql-ws/lib/use/ws';
 import {Server} from 'http';
 import {WebSocketServer} from 'ws';
@@ -10,14 +10,14 @@ import {createGraphQlSchema} from './create-graphql-schema';
 
 export async function startApolloServer({
     httpServer,
-    pubSub,
+    resolvers,
     prisma,
 }: {
     httpServer: Server;
-    pubSub: PubSub;
+    resolvers: IResolvers | Array<IResolvers>;
     prisma: ConcreteClientBase;
 }) {
-    const schema = await createGraphQlSchema(pubSub);
+    const schema = await createGraphQlSchema(resolvers);
 
     // Set up WebSocket server.
     const webSocketServer = new WebSocketServer({

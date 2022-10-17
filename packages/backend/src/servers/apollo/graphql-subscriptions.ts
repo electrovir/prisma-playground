@@ -1,8 +1,8 @@
 import {makeExecutableSchema} from '@graphql-tools/schema';
+import {IResolvers} from '@graphql-tools/utils';
 import {gql} from 'apollo-server-express';
-import {PubSub} from 'graphql-subscriptions';
 
-export function createCustomSubscriptionSchema(pubSub: PubSub) {
+export function createCustomSubscriptionSchema(resolvers: IResolvers | Array<IResolvers>) {
     // Schema definition
     const typeDefs = gql`
         type Query {
@@ -14,21 +14,6 @@ export function createCustomSubscriptionSchema(pubSub: PubSub) {
         }
     `;
 
-    let currentNumber = 0;
-
-    // Resolver map
-    const resolvers = {
-        Query: {
-            currentNumber() {
-                return currentNumber;
-            },
-        },
-        Subscription: {
-            numberIncremented: {
-                subscribe: () => pubSub.asyncIterator(['NUMBER_INCREMENTED']),
-            },
-        },
-    };
     const schema = makeExecutableSchema({typeDefs, resolvers});
 
     return schema;

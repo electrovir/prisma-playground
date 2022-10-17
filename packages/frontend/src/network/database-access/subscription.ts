@@ -17,7 +17,7 @@ async function getCurrentNumber(): Promise<number> {
             },
             {
                 next: (data) => {
-                    combinedData += data;
+                    combinedData += data.data!.currentNumber;
                 },
                 error: (error) => {
                     reject(error);
