@@ -11,3 +11,5 @@ prisma migrate dev;
 set +e;
 
 ts-node ./src/seeding/seed-from-nothing.ts 2> /dev/null;
+
+exit 0;
