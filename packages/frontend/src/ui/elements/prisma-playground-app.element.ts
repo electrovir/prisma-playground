@@ -3,7 +3,7 @@ import {defineElementNoInputs, html} from 'element-vir';
 // import {fetchUsers} from '../../network/database-access/request';
 import '../../network/database-access/request';
 import {fetchPosts, fetchUsers} from '../../network/database-access/request';
-import {subscribeToCurrentNumber} from '../../network/database-access/subscription';
+import {subscribeToMessages} from '../../network/database-access/subscription';
 import {awaited, createStateUpdatingPromiseIfUndefined, MaybePromise} from '../promise-resolver';
 
 export const PrismaPlaygroundAppElement = defineElementNoInputs({
@@ -11,13 +11,13 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
     stateInit: {
         users: undefined as MaybePromise<User[]>,
         posts: undefined as MaybePromise<Post[]>,
-        currentNumber: -1,
+        currentMessage: '',
     },
     initCallback: ({updateState}) => {
-        function updateCurrentNumber(currentNumber: number) {
-            updateState({currentNumber});
+        function updateCurrentMessage(currentMessage: string) {
+            updateState({currentMessage});
         }
-        subscribeToCurrentNumber(updateCurrentNumber).then(updateCurrentNumber);
+        subscribeToMessages(updateCurrentMessage);
     },
     renderCallback: ({state, updateState}) => {
         createStateUpdatingPromiseIfUndefined({
@@ -39,7 +39,7 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
                 ${awaited(state.users, 'Loading...', (users) => {
                     return html`
                         <h2>Incrementing number</h2>
-                        <div>Current number: ${state.currentNumber}</div>
+                        <div>Message: ${state.currentMessage}</div>
                         <h2>Users</h2>
                         <table>
                             ${users.map((user) => {

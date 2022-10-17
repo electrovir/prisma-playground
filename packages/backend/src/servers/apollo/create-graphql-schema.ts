@@ -1,19 +1,12 @@
 import {buildPlaygroundSchema} from '@electrovir/database/src/graphql/build-schema';
-import {mergeSchemas} from '@graphql-tools/schema';
-import {IResolvers} from '@graphql-tools/utils';
+import {PubSubEngine} from '@electrovir/database/src/graphql/type-graphql';
 import {authChecker} from './auth';
-import {createCustomSubscriptionSchema} from './graphql-subscriptions';
 
-export async function createGraphQlSchema(resolvers: IResolvers | Array<IResolvers>) {
-    const schemaForPrismaCrud = await buildPlaygroundSchema([], authChecker);
-    const schemaForSubscriptions = createCustomSubscriptionSchema(resolvers);
+export async function createGraphQlSchema(
+    customResolvers: ReadonlyArray<Function>,
+    pubSub: PubSubEngine,
+) {
+    const schemaForPrismaCrud = await buildPlaygroundSchema(customResolvers, authChecker, pubSub);
 
-    const mergedSchema = mergeSchemas({
-        schemas: [
-            schemaForSubscriptions,
-            schemaForPrismaCrud,
-        ],
-    });
-
-    return mergedSchema;
+    return schemaForPrismaCrud;
 }

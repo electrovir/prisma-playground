@@ -6,6 +6,7 @@ import {PubSub} from 'graphql-subscriptions';
 import {createServer} from 'http';
 import {startApolloServer} from '../servers/apollo/create-apollo-server';
 import {startExpressServer} from '../servers/express/create-express-server';
+import {SampleResolver} from './subscription-resolver';
 
 async function main(clientInterface: WithClientInterface) {
     const PORT = 4000;
@@ -16,10 +17,11 @@ async function main(clientInterface: WithClientInterface) {
 
     // In the background, increment a number every second and notify subscribers when it changes.
     let currentNumber = 0;
-    function incrementNumber() {
+    async function incrementNumber() {
         // console.log('incrementing');
         currentNumber++;
-        pubSub.publish('NUMBER_INCREMENTED', {numberIncremented: currentNumber});
+        await pubSub.publish('NUMBER_INCREMENTED', {numberIncremented: currentNumber});
+        await pubSub.publish('NOTIFICATIONS', 'yolo');
         setTimeout(() => {
             incrementNumber();
         }, 1000);
@@ -45,7 +47,8 @@ async function main(clientInterface: WithClientInterface) {
     const apolloServer = await startApolloServer({
         httpServer,
         prisma: clientInterface.client,
-        resolvers,
+        resolvers: [SampleResolver],
+        pubSub,
     });
 
     apolloServer.applyMiddleware({

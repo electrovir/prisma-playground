@@ -4,54 +4,30 @@ const client = createWebSocketClient({
     url: 'ws://localhost:4000/graphql',
 });
 
-async function getCurrentNumber(): Promise<number> {
-    return new Promise<number>((resolve, reject) => {
-        let combinedData: string = '';
-        client.subscribe(
-            {
-                query: `
-                    {
-                        currentNumber
-                    }
-                `,
-            },
-            {
-                next: (data) => {
-                    combinedData += data.data!.currentNumber;
-                },
-                error: (error) => {
-                    reject(error);
-                },
-                complete: () => {
-                    resolve(Number(combinedData));
-                },
-            },
-        );
-    });
-}
-
-export async function subscribeToCurrentNumber(callback: (data: number) => void) {
-    const currentNumber = await getCurrentNumber();
-    client.subscribe(
+export function subscribeToMessages(callback: (data: string) => void, recursionDepth = 0): void {
+    client.subscribe<{normalSubscription: string}>(
         {
-            query: `
-                    subscription {
-                        numberIncremented
-                    }
-                `,
+            query: `subscription {
+                normalSubscription
+              }`,
         },
         {
             next: (data) => {
-                callback(data.data!.numberIncremented as any);
+                console.log(data);
+                callback(data.data!.normalSubscription);
             },
             error: (error) => {
-                console.error({error});
+                console.error(error);
+                // try again
+                if (recursionDepth <= 100) {
+                    setTimeout(() => {
+                        subscribeToMessages(callback, recursionDepth++);
+                    }, 1000);
+                }
             },
             complete: () => {
                 console.info('subscription complete?');
             },
         },
     );
-
-    return currentNumber;
 }

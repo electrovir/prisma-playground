@@ -29,6 +29,6 @@ export function authChecker(
         roles,
     ]: Parameters<AuthChecker<ApolloContext>>
 ): ReturnType<AuthChecker<ApolloContext>> {
-    console.log({root, args, context, info, roles});
-    return info.fieldName === 'users';
+    console.log(`auth for "${info.fieldName}"`);
+    return info.fieldName !== 'posts';
 }
