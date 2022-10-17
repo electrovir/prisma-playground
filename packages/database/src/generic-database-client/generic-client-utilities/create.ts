@@ -1,4 +1,4 @@
-import {awaitedForEach, typedHasOwnProperty, Writeable} from 'augment-vir';
+import {awaitedForEach, typedHasProperty, Writeable} from 'augment-vir';
 import {ConcreteClientBase} from '../generic-database-client/concrete-client-base';
 import {ClientModelName, getGenericModel} from '../generic-database-client/generic-model';
 
@@ -20,7 +20,7 @@ export async function createMany<
 ) {
     const model = getGenericModel(client, modelName);
 
-    if (typedHasOwnProperty(model, 'createMany') && typeof model.createMany === 'function') {
+    if (typedHasProperty(model, 'createMany') && typeof model.createMany === 'function') {
         await model.createMany({data});
     } else {
         // as cast because awaitedForEach types are wrong

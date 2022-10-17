@@ -4,10 +4,11 @@ import {
     Root,
     Subscription,
 } from '@electrovir/database/src/graphql/type-graphql';
+import {Role} from './auth';
 
 @Resolver()
 export class SampleResolver {
-    @Authorized('ADMIN', 'MODERATOR')
+    @Authorized(Role.Lord)
     @Subscription({topics: 'NOTIFICATIONS'})
     normalSubscription(@Root() message: string): string {
         return message;

@@ -6,7 +6,7 @@ generator client {
 
 generator typegraphql {
   provider = "typegraphql-prisma"
-  output   = "../../../node_modules/.type-graphql"
+  output   = "../node_modules/.type-graphql"
 }
 
 datasource db {

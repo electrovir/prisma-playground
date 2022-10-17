@@ -1,4 +1,4 @@
-import {Prisma, PrismaPromise, UnwrapTuple} from '@prisma/client';
+import {Prisma, PrismaPromise, UnwrapTuple} from '@electrovir/database/src/prisma/prisma-types';
 
 /** The base methods that exist on all prisma clients regardless of which models they contain. */
 export type ConcreteClientBase = {

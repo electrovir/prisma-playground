@@ -1,5 +1,5 @@
-import {Prisma} from '@prisma/client';
 import {getObjectTypedKeys, getObjectTypedValues} from 'augment-vir';
+import {Prisma} from '../../prisma/prisma-types';
 import {ConcreteClientBase} from './concrete-client-base';
 
 // https://github.com/prisma/prisma/issues/11940#issuecomment-1049572440

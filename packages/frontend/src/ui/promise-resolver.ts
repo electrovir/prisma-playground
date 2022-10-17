@@ -1,4 +1,4 @@
-import {extractErrorMessage, isPromiseLike, typedHasOwnProperty} from 'augment-vir';
+import {extractErrorMessage, isPromiseLike, typedHasProperty} from 'augment-vir';
 
 export type MaybePromise<T> =
     | (T extends Promise<infer ValueType> ? T | ValueType : Promise<T> | T)
@@ -72,7 +72,7 @@ export function awaited<ValueGeneric, FallbackGeneric, CallbackReturnGeneric>(
 ): CallbackReturnGeneric | FallbackGeneric | Error | undefined {
     if (isPromiseLike(input) || input == undefined) {
         return notResolvedYetFallback;
-    } else if (typedHasOwnProperty(input, 'error')) {
+    } else if (typedHasProperty(input, 'error')) {
         return input.error as Error;
     } else {
         return resolvedCallback(input as ValueGeneric);

@@ -1,4 +1,3 @@
-import {PrismaClient} from '@prisma/client';
 import {addExitCallback} from 'catch-exit';
 import {join} from 'path';
 import {databaseDir} from '../file-paths';
@@ -6,6 +5,7 @@ import {
     ClientModelNamesEnum,
     makeModelNameEnum,
 } from '../generic-database-client/generic-database-client/generic-model';
+import {PrismaClient} from '../prisma/prisma-types';
 // import {initPrismaDatabase} from './init-prisma-database';
 
 const devDatabasePath = join(databaseDir, 'prisma/database/dev.sqlite');

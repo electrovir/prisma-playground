@@ -1,4 +1,4 @@
-import {Post, User} from '@prisma/client';
+import {Post, User} from '@electrovir/database/src/prisma/prisma-types';
 import {defineElementNoInputs, html} from 'element-vir';
 // import {fetchUsers} from '../../network/database-access/request';
 import '../../network/database-access/request';
@@ -35,11 +35,11 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
         });
 
         return html`
+            <h2>Random Message</h2>
+            <div>Message: ${state.currentMessage}</div>
             <span>
                 ${awaited(state.users, 'Loading...', (users) => {
                     return html`
-                        <h2>Incrementing number</h2>
-                        <div>Message: ${state.currentMessage}</div>
                         <h2>Users</h2>
                         <table>
                             ${users.map((user) => {
@@ -53,6 +53,7 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
                         </table>
                     `;
                 })}
+                <p>Should have an error below (this is caused by the auth check failing)</p>
                 ${awaited(state.posts, 'Loading...', (posts) => {
                     return html`
                         <h2>Posts</h2>

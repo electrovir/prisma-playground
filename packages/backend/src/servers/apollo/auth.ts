@@ -4,13 +4,22 @@ import {
     Authorized,
     ResolversEnhanceMap,
 } from '@electrovir/database/src/graphql/type-graphql';
+import {isEnumValue} from 'augment-vir';
 import {ApolloContext} from './apollo-context';
 
 export enum Role {
-    Peasant = 'peasant',
-    Lord = 'lord',
     King = 'king',
+    Lord = 'lord',
+    Peasant = 'peasant',
+    Nothing = 'nothing',
 }
+
+const roleHierarchy: Readonly<Record<Role, number>> = {
+    [Role.King]: 999,
+    [Role.Lord]: 500,
+    [Role.Peasant]: 100,
+    [Role.Nothing]: 0,
+};
 
 const resolversEnhanceMap: ResolversEnhanceMap = {
     Post: {
@@ -21,6 +30,22 @@ const resolversEnhanceMap: ResolversEnhanceMap = {
     },
 };
 
+function isRoleAtLeast(rawRoleToCheck: unknown, rawRoleRequirements: Role | ReadonlyArray<Role>) {
+    const roleToCheck: Role = isEnumValue(rawRoleToCheck, Role) ? rawRoleToCheck : Role.Nothing;
+
+    const roleRequirements: ReadonlyArray<Role> = Array.isArray(rawRoleRequirements)
+        ? rawRoleRequirements
+        : [rawRoleRequirements];
+
+    const checkHierarch = roleHierarchy[roleToCheck];
+
+    return roleRequirements.every((roleRequirement) => {
+        const requiredHierarch = roleHierarchy[roleRequirement];
+
+        return checkHierarch >= requiredHierarch;
+    });
+}
+
 applyResolversEnhanceMap(resolversEnhanceMap);
 
 export function authChecker(
@@ -29,6 +54,6 @@ export function authChecker(
         roles,
     ]: Parameters<AuthChecker<ApolloContext>>
 ): ReturnType<AuthChecker<ApolloContext>> {
-    console.log(`auth for "${info.fieldName}"`);
+    console.log(`auth for "${info.fieldName}" (needs ${roles})`);
     return info.fieldName !== 'posts';
 }

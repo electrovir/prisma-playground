@@ -1,25 +1,34 @@
 import {ConcreteClientBase} from '@electrovir/database/src/generic-database-client/generic-database-client/concrete-client-base';
-import {PubSubEngine} from '@electrovir/database/src/graphql/type-graphql';
 import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
 import {ApolloServer} from 'apollo-server-express';
+import {randomString} from 'augment-vir/dist/cjs/node-only';
+import {PubSub} from 'graphql-subscriptions';
 import {useServer} from 'graphql-ws/lib/use/ws';
 import {Server} from 'http';
 import {WebSocketServer} from 'ws';
 import {createLogger} from '../logging/create-server-logger';
 import {createGraphQlSchema} from './create-graphql-schema';
+import {SampleResolver} from './subscription-resolver';
 
 export async function startApolloServer({
     httpServer,
-    resolvers,
     prisma,
-    pubSub,
 }: {
     httpServer: Server;
-    resolvers: ReadonlyArray<Function>;
     prisma: ConcreteClientBase;
-    pubSub: PubSubEngine;
 }) {
-    const schema = await createGraphQlSchema(resolvers, pubSub);
+    const pubSub = new PubSub();
+    const schema = await createGraphQlSchema([SampleResolver], pubSub);
+
+    async function sendMessages() {
+        await pubSub.publish('NOTIFICATIONS', randomString());
+        setTimeout(() => {
+            sendMessages();
+        }, 1000);
+    }
+
+    // Start incrementing
+    sendMessages();
 
     // Set up WebSocket server.
     const webSocketServer = new WebSocketServer({
@@ -38,7 +47,7 @@ export async function startApolloServer({
         });
     });
 
-    const subscriptionServerCleanup = useServer({schema}, webSocketServer);
+    const subscriptionServerCleanup = useServer({schema}, webSocketServer as any);
 
     const apolloServer = new ApolloServer({
         context: (expressContext) => {
