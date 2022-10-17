@@ -1,4 +1,4 @@
-import {Post, User} from '@prisma/client';
+import {Post, User} from '@electrovir/database/src/prisma/prisma-types';
 import './subscription';
 
 import {ApolloClient, gql, InMemoryCache} from '@apollo/client/core';

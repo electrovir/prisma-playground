@@ -13,5 +13,10 @@
             "path": "../shared"
         }
     ],
-    "exclude": ["configs"]
+    "exclude": [
+        "./configs",
+        "./dist",
+        "./node_modules",
+        "./test-files"
+    ]
 }

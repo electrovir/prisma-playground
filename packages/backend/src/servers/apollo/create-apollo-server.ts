@@ -7,6 +7,8 @@ import {useServer} from 'graphql-ws/lib/use/ws';
 import {Server} from 'http';
 import {WebSocketServer} from 'ws';
 import {createLogger} from '../logging/create-server-logger';
+import {ApolloContext} from './apollo-context';
+import {extractAuthRole} from './auth/extract-auth-role';
 import {createGraphQlSchema} from './create-graphql-schema';
 import {SampleResolver} from './subscription-resolver';
 
@@ -50,8 +52,11 @@ export async function startApolloServer({
     const subscriptionServerCleanup = useServer({schema}, webSocketServer as any);
 
     const apolloServer = new ApolloServer({
-        context: (expressContext) => {
-            return {prisma};
+        context: (expressContext): ApolloContext => {
+            return {
+                prisma,
+                requestAuth: extractAuthRole(expressContext.req),
+            };
         },
         schema,
         plugins: [

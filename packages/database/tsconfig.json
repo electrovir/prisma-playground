@@ -5,5 +5,11 @@
         "experimentalDecorators": true,
         "rootDir": "./src",
         "outDir": "./dist"
-    }
+    },
+    "exclude": [
+        "./configs",
+        "./dist",
+        "./node_modules",
+        "./test-files"
+    ]
 }
