@@ -24,7 +24,7 @@ async function runLatestQuery() {
         const result = await playgroundQueries[playgroundQueries.length - 1]!(
             clientInterface.client,
         );
-        console.log(result);
+        console.info(result);
     });
 }
 

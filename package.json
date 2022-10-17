@@ -21,6 +21,8 @@
     "scripts": {
         "compile": "npm run compile --workspaces",
         "database:reset": "cd packages/database && npm run prisma:reset",
+        "debug": "concurrently -n frontend,backend -c blue,green \"npm:start:frontend\" \"npm:debug:backend\"",
+        "debug:backend": "cd packages/backend && npm run debug",
         "format": "virmator format",
         "prepack": "npm run compile",
         "playground": "cd packages/backend && npm run playground",
@@ -33,6 +35,9 @@
         "test:all": "npm run test:types && npm test && npm run spellcheck && virmator format check && npm test",
         "test:types": "tsc --build tsconfig.build.json"
     },
+    "dependencies": {
+        "graphql-ws": "^5.10.1"
+    },
     "devDependencies": {
         "concurrently": "7.4.0",
         "prettier": "^2.7.1",
@@ -43,8 +48,5 @@
         "prettier-plugin-sort-json": "^0.0.3",
         "prettier-plugin-toml": "^0.3.1",
         "virmator": "^4.2.10"
-    },
-    "dependencies": {
-        "graphql-ws": "^5.10.1"
     }
 }

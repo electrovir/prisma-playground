@@ -39,7 +39,9 @@ export async function startApolloServer({
     const subscriptionServerCleanup = useServer({schema}, webSocketServer);
 
     const apolloServer = new ApolloServer({
-        context: () => ({prisma}),
+        context: (expressContext) => {
+            return {prisma};
+        },
         schema,
         plugins: [
             // Proper shutdown for the HTTP server.

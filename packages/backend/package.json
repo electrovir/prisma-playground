@@ -8,8 +8,9 @@
     },
     "scripts": {
         "compile": "rm -rf dist && tsc --project tsconfig.json",
+        "debug": "nodemon --config ./configs/nodemon.json -q --delay 500ms --exec 'node --inspect=0.0.0.0:9229 --require ts-node/register src/api/api.ts' -- --inspect",
         "playground": "ts-node src/playground.ts",
-        "start": "nodemon -q --delay 500ms src/api/api.ts",
+        "start": "nodemon --config ./configs/nodemon.json -q --delay 500ms src/api/api.ts",
         "test": "virmator test",
         "test:types": "tsc --noEmit"
     },

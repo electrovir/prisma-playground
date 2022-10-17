@@ -1,0 +1,7 @@
+{
+    "watch": [
+        "./src",
+        "../database/src",
+        "../shared/src"
+    ]
+}

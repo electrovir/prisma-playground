@@ -48,7 +48,7 @@ export async function subscribeToCurrentNumber(callback: (data: number) => void)
                 console.error({error});
             },
             complete: () => {
-                console.log('subscription complete');
+                console.info('subscription complete?');
             },
         },
     );
