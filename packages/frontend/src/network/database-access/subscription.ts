@@ -22,7 +22,7 @@ export function subscribeToMessages(callback: (data: string) => void, recursionD
                 if (recursionDepth <= 100) {
                     setTimeout(() => {
                         subscribeToMessages(callback, recursionDepth++);
-                    }, 1000);
+                    }, 3000);
                 }
             },
             complete: () => {
