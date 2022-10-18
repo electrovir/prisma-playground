@@ -4,14 +4,14 @@ const client = createWebSocketClient({
     url: 'ws://localhost:4000/graphql',
 });
 
-export function subscribeToMessages(callback: (data: string) => void, recursionDepth = 0): void {
+export function subscribeToMessages(role: string, callback: (data: string) => void): void {
     client.subscribe<{normalSubscription: string}>(
         {
             query: `subscription {
                 normalSubscription
               }`,
             variables: {
-                role: '',
+                role,
             },
         },
         {
@@ -21,12 +21,6 @@ export function subscribeToMessages(callback: (data: string) => void, recursionD
             },
             error: (error) => {
                 console.error(error);
-                // try again
-                if (recursionDepth <= 100) {
-                    setTimeout(() => {
-                        subscribeToMessages(callback, recursionDepth++);
-                    }, 3000);
-                }
             },
             complete: () => {
                 console.info('subscription complete?');
