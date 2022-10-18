@@ -3,6 +3,7 @@ import {defineElementNoInputs, html} from 'element-vir';
 // import {fetchUsers} from '../../network/database-access/request';
 import '../../network/database-access/request';
 import {fetchPosts, fetchUsers} from '../../network/database-access/request';
+import {subscribeToMessages} from '../../network/database-access/subscription';
 import {awaited, createStateUpdatingPromiseIfUndefined, MaybePromise} from '../promise-resolver';
 
 export const PrismaPlaygroundAppElement = defineElementNoInputs({
@@ -16,7 +17,7 @@ export const PrismaPlaygroundAppElement = defineElementNoInputs({
         function updateCurrentMessage(currentMessage: string) {
             updateState({currentMessage});
         }
-        // subscribeToMessages(updateCurrentMessage);
+        subscribeToMessages(updateCurrentMessage);
     },
     renderCallback: ({state, updateState}) => {
         createStateUpdatingPromiseIfUndefined({

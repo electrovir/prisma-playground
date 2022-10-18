@@ -1,5 +1,5 @@
 import {applyResolversEnhanceMap, AuthChecker} from '@electrovir/database/src/graphql/type-graphql';
-import {ApolloContext} from '../apollo-context';
+import {RequestContext} from '../request-context';
 import {assertValidRoles, isRoleAtLeast} from './auth-roles';
 import {prismaOnlyResolverAuth} from './prisma-auth';
 
@@ -10,23 +10,27 @@ export function authChecker(
     ...[
         {root, args, info, context},
         roles,
-    ]: Parameters<AuthChecker<ApolloContext>>
-): ReturnType<AuthChecker<ApolloContext>> {
-    assertValidRoles(roles);
-    console.log({root, args, info, context: !!context});
+    ]: Parameters<AuthChecker<RequestContext>>
+): ReturnType<AuthChecker<RequestContext>> {
+    try {
+        assertValidRoles(roles);
 
-    const passesAuthCheck = isRoleAtLeast({
-        input: context?.requestAuth,
-        requirement: roles,
-    });
-    if (passesAuthCheck) {
-        console.info(
-            `Pased auth check on "${info.fieldName}": Got "${context?.requestAuth}" and required "${roles}"`,
-        );
-    } else {
-        console.error(
-            `Failed auth check on "${info.fieldName}": Got "${context?.requestAuth}" but required "${roles}"`,
-        );
+        const passesAuthCheck = isRoleAtLeast({
+            input: context?.requestAuth,
+            requirement: roles,
+        });
+        if (passesAuthCheck) {
+            console.info(
+                `Pased auth check on "${info.fieldName}": Got "${context?.requestAuth}" and required "${roles}"`,
+            );
+        } else {
+            console.error(
+                `Failed auth check on "${info.fieldName}": Got "${context?.requestAuth}" but required "${roles}"`,
+            );
+        }
+        return passesAuthCheck;
+    } catch (error) {
+        console.error(error);
+        return false;
     }
-    return passesAuthCheck;
 }

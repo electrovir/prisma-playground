@@ -10,6 +10,9 @@ export function subscribeToMessages(callback: (data: string) => void, recursionD
             query: `subscription {
                 normalSubscription
               }`,
+            variables: {
+                role: '',
+            },
         },
         {
             next: (data) => {
