@@ -16,12 +16,12 @@ export function authChecker(
         assertValidRoles(roles);
 
         const passesAuthCheck = isRoleAtLeast({
-            input: context?.requestAuth,
+            input: context.requestAuth,
             requirement: roles,
         });
         if (passesAuthCheck) {
             console.info(
-                `Pased auth check on "${info.fieldName}": Got "${context?.requestAuth}" and required "${roles}"`,
+                `Passed auth check on "${info.fieldName}": Got "${context?.requestAuth}" and required "${roles}"`,
             );
         } else {
             console.error(

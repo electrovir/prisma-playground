@@ -1,11 +1,14 @@
 import {createClient as createWebSocketClient} from 'graphql-ws';
 
-const client = createWebSocketClient({
-    url: 'ws://localhost:4000/graphql',
-});
+function getClient() {
+    const client = createWebSocketClient({
+        url: 'ws://localhost:4000/graphql',
+    });
+    return client;
+}
 
 export function subscribeToMessages(role: string, callback: (data: string) => void): void {
-    client.subscribe<{normalSubscription: string}>(
+    getClient().subscribe<{normalSubscription: string}>(
         {
             query: `subscription {
                 normalSubscription
